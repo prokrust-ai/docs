@@ -24,7 +24,7 @@ function extractComments(raw) {
   const prose = [];
   for (const line of (raw ?? '').trim().split('\n').map(line => line.trim())) {
     if (!line.startsWith('@')) { prose.push(line); continue; }
-    const match = line.match(/^@(request|response|unimplemented|error|example|audience)(?:\s+(.*))?$/);
+    const match = line.match(/^@(request|response|unimplemented|error|errors|example|audience)(?:\s+(.*))?$/);
     if (!match || Object.hasOwn(tags, match[1])) throw Error('Invalid or duplicate RPC comment directive: ' + line);
     const [, key, data] = match;
     if (key === 'audience' && audiences.has(data)) tags[key] = data;
@@ -116,7 +116,11 @@ function exportModule(label, repo) {
               {input: JSON.stringify(examples[key]), stdio: ['pipe', 'ignore', 'pipe']});
           } catch (err) { throw Error(id + ' @' + key + ': ' + err.stderr); }
         }
-        return {name: m.name, description, input, output, ...(m.clientStreaming && {clientStreaming:true}),
+        if (tags.errors && (Array.isArray(tags.errors) || typeof tags.errors !== 'object' ||
+            Object.entries(tags.errors).some(([code, text]) => !/^[a-z]+(?:_[a-z]+)*$/.test(code) || typeof text !== 'string' || !text.trim()))) {
+          throw Error('Invalid @errors guidance for ' + id);
+        }
+        return {name: m.name, description, ...(tags.errors && {errors: tags.errors}), input, output, ...(m.clientStreaming && {clientStreaming:true}),
           ...(m.serverStreaming && {serverStreaming:true}), ...(tags.unimplemented && {unimplemented:true}), examples};
       });
       catalog.push({name, audience, description, methods});

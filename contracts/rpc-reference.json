@@ -10,7 +10,7 @@
         "prokrust.api.v1alpha1.ProviderCatalogService",
         "prokrust.api.v1alpha1.TrainingService"
       ],
-      "sha256": "8d68473aa9d819acf6504701fc320572b98710f54f866f607e110b8906c0a518"
+      "sha256": "ee8163aa4fc2082ea1326e6a8d8c4f1ade5b4d65cafdaffa2116d166408380d0"
     },
     {
       "module": "protocol",
@@ -2845,7 +2845,13 @@
         },
         {
           "name": "GetTable",
-          "description": "Read the named Table in one workspace. Compare generation with status.observedGeneration\nwhen interpreting a controller result. For invalid_argument, check namespace and name. For\nunauthenticated, check the Kubernetes bearer or signed-in session. For not_found, check the\nworkspace and table name. For permission_denied, check the caller’s permission to get\ntables.data.prokrust.ai in this namespace.",
+          "description": "Read one Table definition and its controller status. Supply both the workspace namespace\nand the Kubernetes resource name. Compare generation with status.observedGeneration to\nsee whether the controller has processed the current definition.",
+          "errors": {
+            "invalid_argument": "Supply a valid Kubernetes namespace and table name.",
+            "unauthenticated": "Check the Kubernetes bearer token or sign in again.",
+            "not_found": "Check that the table exists in the requested workspace.",
+            "permission_denied": "Check the caller’s permission to get tables.data.prokrust.ai in the table’s namespace."
+          },
           "input": "prokrust.api.v1alpha1.GetResourceRequest",
           "output": "prokrust.api.v1alpha1.Resource",
           "examples": {

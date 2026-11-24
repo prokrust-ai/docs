@@ -23,6 +23,12 @@ const pretty = o => JSON.stringify(o, null, 2);
 const origin = '/reference/api/';
 const serviceUrl = s => origin + kebab(last(s.name)) + '/';
 const methodUrl = (s,m) => s.name === 'prokrust.api.v1alpha1.CatalogService' && m.name === 'GetTable' ? origin + 'get-table/' : serviceUrl(s) + kebab(m.name) + '/';
+const methodLinks = new Map(input.services.flatMap(service => service.methods.map(method =>
+  [last(service.name) + '/' + method.name, methodUrl(service, method)])));
+function linkMethods(description) {
+  return description.replace(/\b[A-Z]\w*Service\/[A-Z]\w*\b/g, name =>
+    methodLinks.has(name) ? '[' + code(name) + '](' + methodLinks.get(name) + ')' : name);
+}
 const typeUrl = t => origin + 'types/' + t.toLowerCase().replaceAll('.', '/') + '/';
 const wellKnown = {'google.protobuf.Struct':'JSON object', 'google.protobuf.Timestamp':'RFC 3339 timestamp', 'google.protobuf.Duration':'duration in seconds',
   'google.protobuf.Value':'JSON value', 'google.protobuf.Empty':'empty object'};
@@ -72,7 +78,7 @@ for (const s of input.services) {
     const rpc = '/' + s.name + '/' + m.name;
     const streaming = m.serverStreaming || m.clientStreaming;
     const headers = s.audience === 'installation' && !streaming;
-    const sections = [m.description, '['+last(s.name)+']('+serviceUrl(s)+') · '+audience[s.audience],block('text','POST '+rpc)];
+    const sections = [linkMethods(m.description), '['+last(s.name)+']('+serviceUrl(s)+') · '+audience[s.audience],block('text','POST '+rpc)];
     if (headers) sections.push('## Request headers',
       '| Header | Value and purpose |\n| --- | --- |\n| '+code('Authorization')+' | Use '+code('Bearer $PROKRUST_TOKEN')+' for a Kubernetes caller authorized for this operation. Browser calls use the signed-in session. |\n| '+code('Content-Type')+' | '+code('application/json')+' selects ProtoJSON for this unary request. |\n| '+code('Connect-Protocol-Version')+' | '+code('1')+' selects version 1 of the Connect protocol. |');
     if (streaming) sections.push('This RPC uses '+(m.serverStreaming?'a response stream':'a request stream')+'. The example shows one message. Use a streaming Connect client for the sequence.');
@@ -90,6 +96,8 @@ for (const s of input.services) {
         m.serverStreaming?'## Example response message':'## Example response',block('json',pretty(m.examples.response)));
       if (m.examples.error) sections.push('## Example error',block('json',pretty(m.examples.error)));
     }
+    if (m.errors) sections.push('## Errors', ['| Connect code | What to check |', '| --- | --- |',
+      ...Object.entries(m.errors).map(([status, hint]) => '| ' + code(status) + ' | ' + inline(hint) + ' |')].join('\n'));
     if (s.audience === 'installation' && !m.unimplemented) {
       const match = /^(?:Create|Get|Update|List|Delete|Watch)([A-Z].*)$/.exec(m.name);
       const resources = match ? crds.filter(({kind}) => [kind,kind+'s',kind.replace(/y$/, 'ies')].includes(match[1])) : [];
