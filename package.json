@@ -9,11 +9,13 @@
   "scripts": {
     "refresh:reference": "node scripts/refresh-reference.mjs",
     "refresh:graph": "node scripts/refresh-reference.mjs --resource data.prokrust.ai/v1beta1/Graph",
-    "generate": "node scripts/generate-reference.mjs && node scripts/generate-examples.mjs",
-    "check": "node scripts/check-example.mjs && node --test scripts/resource-reference.test.mjs",
+    "generate": "node scripts/generate-reference.mjs && node scripts/generate-examples.mjs && node scripts/generate-api.mjs && node scripts/generate-http-reference.mjs",
+    "check": "node scripts/check-example.mjs && node --test scripts/resource-reference.test.mjs scripts/rpc-reference.test.mjs && node scripts/generate-api.mjs --check && node scripts/generate-http-reference.mjs --check",
     "start": "pnpm generate && docusaurus start",
     "build": "pnpm generate && pnpm check && docusaurus build",
-    "serve": "docusaurus serve"
+    "serve": "docusaurus serve",
+    "refresh:api": "node scripts/refresh-api.mjs",
+    "refresh:http": "node scripts/refresh-http.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

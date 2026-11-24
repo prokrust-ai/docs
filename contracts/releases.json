@@ -11,10 +11,6 @@
       "selector-v1.json": "f2bc86898d3d2d182032758d99f06eb270cbc5b68b30e469b5b9b82461d2d07b"
     }
   },
-  "control": {
-    "schemaVersion": "0.5.0-rc.1",
-    "moduleCommit": "a699de34341744bfb2c75bafb6ebd97d"
-  },
   "operator": {
     "version": "0.22.0-rc.1",
     "revision": "53b5db102ee07629c6f84b177761339360d1cf2a",

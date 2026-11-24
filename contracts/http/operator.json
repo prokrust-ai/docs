@@ -1,0 +1,93 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Prokrust installation metrics HTTP API",
+    "version": "0.22.0-rc.1",
+    "x-release": {
+      "component": "operator",
+      "tag": "v0.22.0-rc.1",
+      "commit": "53b5db102ee07629c6f84b177761339360d1cf2a"
+    }
+  },
+  "tags": [
+    {
+      "name": "operator-metrics",
+      "description": "The system chart exposes licensing metrics on the prokrust-license-metrics Service at port 8082. Set METRICS_URL to that HTTP listener from an authorized monitoring pod. The NetworkPolicy admits the peers configured under licensing.metrics.trustedSources. The optional ServiceMonitor scrapes every 30 seconds. Admission and startup-authorization endpoints use separate controller listeners.",
+      "x-title": "Operator metrics",
+      "x-metric-gauges": {
+        "available_cpu_millis": "Unreserved CPU millicores; zero after expiry. Inspect collection freshness.",
+        "available_gpus": "Unreserved GPUs; zero after expiry. Inspect collection freshness.",
+        "closing_allocations": "Closing owner allocations still retained in the durable ledger.",
+        "collection_last_success_timestamp_seconds": "Unix time of the last complete licensing collection; zero before initialization.",
+        "collection_success": "Whether the last licensing collection succeeded; zero before initialization or after failure.",
+        "entitlement_available": "Whether a verified entitlement was available at last collection.",
+        "entitlement_expires_timestamp_seconds": "Last verified entitlement expiry, as Unix seconds.",
+        "entitlement_valid": "Whether the last verified entitlement has not expired at scrape time; inspect collection freshness.",
+        "leader": "Whether this replica currently holds the application controller lease.",
+        "ledger_bytes": "Serialized durable ledger size in bytes.",
+        "ledger_limit_bytes": "Serialized ledger admission ceiling in bytes.",
+        "ledger_utilization_ratio": "Serialized ledger bytes divided by the admission ceiling.",
+        "licensed_cpu_millis": "Last verified entitlement CPU capacity in millicores.",
+        "licensed_gpus": "Last verified entitlement whole GPU capacity.",
+        "renewal_failed": "Whether the last complete collection observed a current failed renewal condition, independently of cached entitlement validity.",
+        "reserved_cpu_millis": "Installation CPU millicores reserved by durable owner envelopes.",
+        "reserved_gpus": "Installation GPUs reserved by durable owner envelopes.",
+        "unresolved_slots": "Durable Pod admissions not yet observed in Kubernetes; capacity remains fenced.",
+        "usage_allocated_cpu_cores": "Observed execution-enabled licensed Pod CPU limits, in cores; not CPU utilization.",
+        "usage_allocated_gpus": "Observed execution-enabled licensed Pod whole-GPU limits; not GPU utilization.",
+        "usage_reserved_cpu_cores": "Durable licensed CPU envelope, in cores, by managed namespace and class.",
+        "usage_reserved_gpus": "Durable licensed whole-GPU envelope by managed namespace and class.",
+        "webhook_available": "Whether this replica has bound the admission HTTPS listener.",
+        "workload_allocated_cpu_cores": "Opt-in current licensed workload allocation; historical retention belongs to customer Prometheus.",
+        "workload_allocated_gpus": "Opt-in current licensed workload allocation; historical retention belongs to customer Prometheus.",
+        "workload_metrics_truncated": "Owners omitted by the configured opt-in metric cardinality ceiling.",
+        "workload_reserved_cpu_cores": "Opt-in current licensed workload allocation; historical retention belongs to customer Prometheus.",
+        "workload_reserved_gpus": "Opt-in current licensed workload allocation; historical retention belongs to customer Prometheus."
+      },
+      "x-metric-counters": {
+        "admissions_total": "License validation responses from this replica, including dry runs.",
+        "collection_failures_total": "Failed licensing collections in this process.",
+        "ledger_cas_conflicts_total": "Ledger resourceVersion conflicts in this process.",
+        "startups_total": "Startup authorization results."
+      }
+    }
+  ],
+  "paths": {
+    "/metrics": {
+      "get": {
+        "tags": [
+          "operator-metrics"
+        ],
+        "operationId": "operatorMetrics",
+        "summary": "Scrape licensing metrics",
+        "description": "Read each replica independently. Use the leader gauge to identify the application controller holding the lease. Check collection freshness before interpreting reservation or entitlement gauges. An absent series can mean the controller has no successful snapshot.",
+        "responses": {
+          "200": {
+            "description": "Prometheus exposition format. HELP lines describe metric families. TYPE identifies gauges and counters. Labels distinguish class, admission outcome, and dry-run status where present.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "description": "Text samples. The leader gauge is 1 on the current lease holder and 0 on a follower."
+                },
+                "example": "# HELP prokrust_license_operator_leader Whether this replica currently holds the application controller lease.\n# TYPE prokrust_license_operator_leader gauge\nprokrust_license_operator_leader 1"
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "description": "no-store requests a new scrape.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-request-example": "curl --fail \"$METRICS_URL/metrics\""
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}
