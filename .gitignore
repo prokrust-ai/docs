@@ -7,5 +7,3 @@ docs/reference/kubernetes/
 static/examples/generated/
 
 docs/reference/api/rpc/
-docs/reference/api/http/
-static/openapi/

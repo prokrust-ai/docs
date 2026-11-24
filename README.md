@@ -1,6 +1,6 @@
 # Prokrust documentation
 
-Docusaurus source for `docs.prokrust.ai`. Includes the operator and user guides, Kubernetes resources generated from the pinned public CRD chart, the synthetic provider schemas, and the public RPC and HTTP reference.
+Docusaurus source for `docs.prokrust.ai`. Includes the operator and user guides, Kubernetes resources generated from the pinned public CRD chart, the synthetic provider schemas, and the public RPC reference.
 
 ## Local development
 
@@ -19,7 +19,7 @@ pnpm start
 
 - **Kubernetes.** Copy the selected public `prokrust-crds` chart's complete `files/` into `contracts/kubernetes/` when changing the pin. The reference uses every served core kind and every connector in the chart's lock. The refresh checks their validation schemas against the selected producers. [Public charts](https://github.com/prokrust-ai/helm-charts/tree/main/charts/prokrust-crds)
 - **Connector configuration.** Keep each published version's schemas under `contracts/<connector>/<release>/`. Add a release page below the provider in the sidebar. Bind the page to those versioned files. When the quickstart moves to a new release, update its pin and schema digests in `contracts/releases.json`. Keep previous release pages and schema files available. The synthetic walkthrough generates its per-resource YAML and Connect request bodies from the same validated example under `static/examples/`.
-- **Public APIs.** The RPC bundle comes from the owning protobuf descriptors and leading comments. HTTP operations use their producing service’s OpenAPI contract. See [Generate the public API reference](#generate-the-public-api-reference).
+- **Public APIs.** The RPC bundle comes from the owning protobuf descriptors and leading comments. See [Generate the public API reference](#generate-the-public-api-reference).
 
 The default build consumes the checked-in inputs. Public API examples target the reader's installation and use copyable requests.
 
@@ -53,7 +53,7 @@ See the [documentation style guide](STYLE.md) for page structure, action tabs, e
 
 ## Generate the public API reference
 
-The production build uses checked-in public inputs in `contracts/rpc-reference.json` and `contracts/http/`. The API reference describes the imported source revision. A client calling an older installation must use the methods and fields available in that installation. HTTP pages identify version-specific behavior.
+The production build uses the checked-in public RPC bundle in `contracts/rpc-reference.json`. The API reference describes the imported source revision. A client calling an older installation must use the methods and fields available in that installation.
 
 For an RPC change, check out the three owning schema modules and install Buf. Use the module roots that contain `buf.yaml`. Build the public bundle and verify that it is reproducible.
 
@@ -64,11 +64,3 @@ pnpm build
 ```
 
 The importer reads each service’s required `@audience` directive in the three modules and follows the types reachable from public RPCs. Buf decodes each request and successful response example against the method signature. Reachable field and enum descriptions, method examples and service classifications are required. The bundle records SHA-256 fingerprints of the public projections and contains only reachable public types. Build the site to review links, field tables and streaming examples.
-
-HTTP-only operations come from the Web API, serving, and operator producers. Their exporters check the mounted routes against the public OpenAPI definitions. The Web API exporter also reads the pinned release from Git history to reproduce its contract. Use full producer checkouts for this refresh.
-
-```sh
-pnpm refresh:http --web-api "$WEB_API" --serving "$SERVING" --operator "$OPERATOR_REPO"
-pnpm refresh:http --web-api "$WEB_API" --serving "$SERVING" --operator "$OPERATOR_REPO" --check
-pnpm build
-```

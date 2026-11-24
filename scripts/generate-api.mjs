@@ -122,8 +122,7 @@ const groups = [
 ];
 const listing = groups.flatMap(([heading,key]) => ['## '+heading,
   input.services.filter(s=>s.audience===key).map(s=>'- ['+last(s.name)+']('+serviceUrl(s)+') — '+inline(summary(s.description))).join('\n')]);
-page('index.md','Public API',origin,['Choose the interface for the component you call. Each RPC page gives its fields, examples, and response or error. Available methods and fields depend on the component versions in your installation.',...listing,
- '## HTTP endpoints','[Browser sessions](/reference/api/http/web-session/) · [Inference](/reference/api/http/inference/) · [Performance captures](/reference/api/http/performance/) · [Web health](/reference/api/http/web-health/) · [Operator metrics](/reference/api/http/operator-metrics/)']);
+page('index.md','Public API',origin,['Choose the interface for the component you call. Each RPC page gives its fields, examples, and response or error. Available methods and fields depend on the component versions in your installation.',...listing]);
 files.set('sidebar.json',pretty(sidebar)+'\n');
 function existing(dir) {
   if (!fs.existsSync(dir)) return [];
