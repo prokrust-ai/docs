@@ -1,0 +1,21 @@
+apiVersion: data.prokrust.ai/v1beta1
+kind: Table
+metadata:
+  name: <table-name>
+spec:
+  source:
+    connectionRef:
+      apiVersion: <connection-api-version>
+      kind: <connection-kind>
+      name: <connection-name>
+    selector:
+      schemaVersion: <selector-version>
+      config:
+        <selector-field>: <selector-value>
+  columns:
+    - name: <key-column>
+      physicalType: Utf8
+      semanticType: Id
+      feature: false
+  primaryKey: <key-column>
+  featureTimePolicy: Static

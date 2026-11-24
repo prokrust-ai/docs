@@ -1,0 +1,32 @@
+---
+title: Reference Doc
+slug: /reference
+---
+import releases from '@site/contracts/releases.json';
+import Inventory from './kubernetes/inventory.json';
+import Link from '@docusaurus/Link';
+
+Use the Kubernetes reference to interpret controller status or configure a resource. For example, [Graph conditions](/reference/kubernetes/data.prokrust.ai/v1beta1/graph/#conditions) explain why an accepted graph can still be blocked. To define a table with your own data, see [Create a table](/user/create-a-table/).
+
+## Connectors
+
+Choose a connection to inspect its configuration, credentials, runtime readiness, or admission of new scans.
+
+<ul>{Object.values(Inventory).flat().filter(resource => resource.provider).map(({kind, url}) =>
+  <li key={url}><Link to={url}>{kind}</Link></li>
+)}</ul>
+
+For generated event data, see the [Synthetic 1.1.0-rc.1 guide](/reference/connectors/synthetic/1.1.0-rc.1/).
+
+## Control API
+
+[CatalogService.GetTable](/reference/api/get-table/) reads the definition and status of one table in a workspace. Its request and response fields come from control schema <code>{releases.control.schemaVersion}</code>.
+
+## Kubernetes resources
+
+Find a kind under the API group in your manifest's `apiVersion`. These definitions come from <code>{releases.crds.chart}</code> <code>{releases.crds.version}</code>. Connector kinds are available when the operator enables the corresponding CRD feature.
+
+{Object.entries(Inventory).map(([group, resources]) => <section key={group}>
+  <h3>{group}</h3>
+  <ul>{resources.map(({kind, version, url, purpose}) => <li key={url}><Link to={url}>{kind}</Link> <code>{version}</code>. {purpose}</li>)}</ul>
+</section>)}

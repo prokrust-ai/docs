@@ -1,0 +1,39 @@
+apiVersion: sources.prokrust.ai/v1beta1
+kind: SyntheticConnection
+metadata:
+  name: fixture
+spec:
+  seed: 42
+  partitions: 2
+  rowsPerPartition: 64
+---
+apiVersion: data.prokrust.ai/v1beta1
+kind: Table
+metadata:
+  name: events
+spec:
+  source:
+    connectionRef:
+      apiVersion: sources.prokrust.ai/v1beta1
+      kind: SyntheticConnection
+      name: fixture
+    selector:
+      schemaVersion: v1
+      config:
+        dataset: events
+  columns:
+    - name: event_id
+      physicalType: Utf8
+      semanticType: Id
+      feature: false
+    - name: reading
+      physicalType: Float64
+      semanticType: Numerical
+      feature: true
+  primaryKey: event_id
+  featureTimePolicy: Static
+  ingestion:
+    columns:
+      - name: reading
+        source:
+          name: value
