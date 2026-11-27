@@ -4,7 +4,8 @@
 
 - Use **User guide → Core concepts** to explain what an object represents and how it relates to other objects. Use **How-to Guides** for tasks. Title a task with a verb and an object, such as **Create a table**.
 - Start each how-to with the result and its prerequisites. Use the reader's own workspace, names, connections, and data. Keep a concrete dataset in a named quickstart. Explain why the quickstart needs that dataset.
-- Put installation, permissions, and workspace enrollment in the operator guide. Link to these prerequisites from the user guide.
+- Group the operator guide by Installation, Configuration, and Operations. Give System and Workspace installation separate pages. Keep installing a connector provider separate from creating a source connection in a workspace.
+- During navigation review, use a title and a one-sentence scope for each planned guide. Mark it as planned. Use the sidebar to generate section indexes. Preserve published routes, anchors used by generated references, and content rendered from contracts.
 - Put provider settings under **Reference Doc → Connectors → provider → release**. Link to the release and section that define the field. Distinguish the connector release, Kubernetes API version, and selector schema version.
 
 ## Write instructions in plain technical English

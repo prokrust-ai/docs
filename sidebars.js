@@ -1,6 +1,10 @@
 import rpcSidebar from './docs/reference/api/rpc/sidebar.json';
 import inventory from './docs/reference/kubernetes/inventory.json';
 
+function section(label, slug, items) {
+  return {type: 'category', label, link: {type: 'generated-index', title: label, slug}, items};
+}
+
 const providers = new Map();
 for (const resource of Object.values(inventory).flat()) {
   if (!resource.provider) continue;
@@ -17,25 +21,54 @@ const connectorPages = [...providers.entries()].sort(([a], [b]) => a.localeCompa
   if (synthetic) items.unshift('reference/connectors/synthetic/release-1.1.0-rc.1');
   return {
     type: 'category', label: resources[0].kind.replace(/Connection$/, ''),
-    ...(synthetic && {link: {type: 'doc', id: 'reference/connectors/synthetic'}}), items,
+    ...(synthetic && {link: {type: 'generated-index', title: 'Synthetic', slug: '/reference/connectors/synthetic'}}), items,
   };
 });
 
 export default {
   handbook: [
-    {type: 'category', label: 'Operator guide', items: ['operator/workspaces']},
-    {
-      type: 'category', label: 'User guide',
-      link: {type: 'doc', id: 'user/overview'},
-      items: [
-        'user/core-concepts',
-        {
-          type: 'category', label: 'How-to Guides',
-          link: {type: 'generated-index', slug: '/user/how-to-guides', title: 'How-to Guides'},
-          items: ['user/create-a-table', 'user/synthetic-table'],
-        },
-      ],
-    },
+    section('Operator guide', '/operator', [
+      section('Installation', '/operator/installation', [
+        'operator/installation/system',
+        'operator/installation/connector-providers',
+        'operator/workspaces',
+      ]),
+      section('Configuration', '/operator/configuration', [
+        'operator/configuration/oidc',
+        'operator/configuration/rbac',
+        'operator/configuration/policy',
+        'operator/configuration/storage',
+        'operator/configuration/compute',
+        'operator/configuration/networking',
+        'operator/configuration/licensing',
+        'operator/configuration/model-serving',
+      ]),
+      section('Operations', '/operator/operations', [
+        'operator/operations/upgrade',
+        'operator/operations/troubleshoot',
+        'operator/operations/uninstall',
+      ]),
+    ]),
+    section('User guide', '/user', [
+      section('Core concepts', '/user/core-concepts', [
+        'user/concepts/workspaces',
+        'user/concepts/connections-and-tables',
+        'user/concepts/graphs-and-snapshots',
+        'user/concepts/prediction-queries',
+        'user/concepts/models-and-predictions',
+      ]),
+      section('How-to Guides', '/user/how-to-guides', [
+        'user/how-to/connect-a-data-source',
+        'user/create-a-table',
+        'user/how-to/create-a-graph',
+        'user/how-to/build-a-snapshot',
+        'user/how-to/write-a-prediction-query',
+        'user/how-to/train-a-model',
+        'user/how-to/run-batch-predictions',
+        'user/how-to/serve-a-model',
+        'user/synthetic-table',
+      ]),
+    ]),
     {
       type: 'category', label: 'Reference Doc', link: {type: 'doc', id: 'reference/overview'},
       items: [

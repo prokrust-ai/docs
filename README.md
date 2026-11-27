@@ -1,6 +1,6 @@
 # Prokrust documentation
 
-Docusaurus source for `docs.prokrust.ai`. Includes the operator and user guides, Kubernetes resources generated from the pinned public CRD chart, the synthetic provider schemas, and the public RPC reference.
+Docusaurus source for `docs.prokrust.ai`. The operator and user guides currently outline planned topics. The reference includes Kubernetes resources generated from the pinned public CRD chart, the synthetic provider schemas, and the public RPC reference.
 
 ## Local development
 

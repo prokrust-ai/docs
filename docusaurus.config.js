@@ -23,7 +23,7 @@ export default {
     navbar: {
       logo: {alt: 'Prokrust', src: 'img/prokrust-light.png', srcDark: 'img/prokrust-dark.png', href: '/', target: '_self'},
       items: [
-        {to: '/operator/workspaces/', label: 'Operator guide', position: 'left'},
+        {to: '/operator/', label: 'Operator guide', position: 'left'},
         {to: '/user/', label: 'User guide', position: 'left'},
         {to: '/reference/', label: 'Reference Doc', position: 'left'},
       ],

@@ -7,54 +7,19 @@ slug: /reference/connectors/synthetic/1.1.0-rc.1
 import connection from '@site/contracts/synthetic/1.1.0-rc.1/connection-v1.json';
 import selector from '@site/contracts/synthetic/1.1.0-rc.1/selector-v1.json';
 
-Use this release to generate event data with a known row count. The connection controls the files and their contents. A table selects the dataset and declares which columns to read.
-
 ## Connection fields
 
-This example shows the `spec` of a [SyntheticConnection](/reference/kubernetes/sources.prokrust.ai/v1beta1/syntheticconnection/). It generates two CSV files with 64 data rows each.
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Minimum</th><th>Maximum</th></tr></thead>
+  <tbody>{Object.entries(connection.properties).map(([field, schema]) =>
+    <tr key={field}><td><code>spec.{field}</code></td><td>{schema.type}</td><td>{schema.minimum}</td><td>{schema.maximum}</td></tr>
+  )}</tbody>
+</table>
 
-```yaml
-spec:
-  seed: 42
-  partitions: 2
-  rowsPerPartition: 64
-```
-
-All three fields are required integers. The connection schema supplies no defaults.
-
-| Field | Range | How to choose |
-| --- | --- | --- |
-| `spec.seed` | {connection.properties.seed.minimum}–{connection.properties.seed.maximum} | The seed sets the generated numbers in the `value` column. Use the same seed and layout to repeat a test. Use a different seed to test other values with the same row count. |
-| `spec.partitions` | {connection.properties.partitions.minimum}–{connection.properties.partitions.maximum} | Each partition produces one file. Use one partition to test one file. Use two or more to test reads across files. |
-| `spec.rowsPerPartition` | {connection.properties.rowsPerPartition.minimum}–{connection.properties.rowsPerPartition.maximum} | Sets the number of data rows in each file. Increase it to test more rows per file. Use zero to test a file with only a header. |
-
-Kubernetes fixes the connection spec at creation. To change a value, create a new connection. Set the table’s `spec.source.connectionRef.name` to the new connection name.
+[Field descriptions in SyntheticConnection](/reference/kubernetes/sources.prokrust.ai/v1beta1/syntheticconnection/#spec)
 
 ## Table selector
 
-In a table, `spec.source.connectionRef` identifies the connection in the same workspace. The adjacent `selector` identifies the dataset within that connection. This example shows the selector under `spec.source`.
+The selector schema requires <code>config.dataset</code> to equal <code>{selector.properties.dataset.const}</code>.
 
-```yaml
-selector:
-  schemaVersion: v1
-  config:
-    dataset: events
-```
-
-| Field under `spec.source.selector` | How to choose |
-| --- | --- |
-| `schemaVersion` | Selects the schema that defines the keys in `config`. This connector release accepts only `v1`. Use the selector version that the installed connector supports. |
-| `config` | Holds the values the connector uses to find the data. When you switch connector types, use the fields that the new connector accepts. |
-| `config.dataset` | Selects the generated event dataset. This release accepts only <code>{selector.properties.dataset.const}</code>. Keep this value if you rename the table. To change the generated rows, use a different connection. |
-
-The connector release is `1.1.0-rc.1`. The connection uses the Kubernetes API version `sources.prokrust.ai/v1beta1`. The selector uses the separate schema version `v1`.
-
-## Generated columns
-
-| CSV header | Contents | When to use it |
-| --- | --- | --- |
-| `event_id` | Text identifier unique to each row in the dataset. | Use it as a table’s string primary key. |
-| `event_time` | UTC timestamp. | Define a timestamp column when a table needs event time. |
-| `value` | Number derived from the seed and row ordinal. | Use it as a numerical feature. |
-
-The [synthetic table quickstart](/user/synthetic-table/) shows how to read these fields by CSV header name.
+[Selector fields in Table](/reference/kubernetes/data.prokrust.ai/v1beta1/table/#source)
