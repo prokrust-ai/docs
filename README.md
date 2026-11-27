@@ -13,6 +13,10 @@ pnpm start
 
 `pnpm build` regenerates the Kubernetes pages, checks the example against the CRD and provider schemas, validates internal links, and builds the static site and local search index. Use `pnpm serve` to preview the production build with search. These checks run without a cluster.
 
+## Publishing
+
+Pull requests run the production build. On each push to `main`, GitHub Actions uploads the built site and deploys it to [docs.prokrust.ai](https://docs.prokrust.ai/) through GitHub Pages.
+
 ## Update contract inputs
 
 `contracts/releases.json` pins the Kubernetes chart source and provider schemas independently. The versions identify the inputs used to build this reference.
