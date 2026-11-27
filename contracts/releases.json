@@ -1,0 +1,27 @@
+{
+  "crds": {
+    "chart": "prokrust-crds",
+    "version": "0.23.0-rc.1",
+    "revision": "1ae2f00d3c311cc61356235d9191cd1e49489275"
+  },
+  "synthetic": {
+    "version": "1.1.0-rc.1",
+    "schemas": {
+      "connection-v1.json": "bd836f078291ce5e8ccbd9436a4852f1f7291f3add7c4afeafe4cf2b194c48a1",
+      "selector-v1.json": "f2bc86898d3d2d182032758d99f06eb270cbc5b68b30e469b5b9b82461d2d07b"
+    }
+  },
+  "operator": {
+    "version": "0.22.0-rc.1",
+    "revision": "53b5db102ee07629c6f84b177761339360d1cf2a",
+    "systemChartVersion": "0.22.0-rc.2"
+  },
+  "connectorControllers": {
+    "bigquery": "1.2.0-rc.1",
+    "gcs": "1.1.0-rc.1",
+    "iceberg": "1.1.0-rc.1",
+    "paimon": "1.1.0-rc.1",
+    "s3": "1.1.0-rc.1",
+    "synthetic": "1.1.0-rc.1"
+  }
+}

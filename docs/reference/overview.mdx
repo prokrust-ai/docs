@@ -1,0 +1,29 @@
+---
+title: Reference Doc
+slug: /reference
+---
+import releases from '@site/contracts/releases.json';
+import Inventory from './kubernetes/inventory.json';
+import Link from '@docusaurus/Link';
+
+## Connectors
+
+[Browse connector releases](/reference/connectors/)
+
+<ul>{Object.values(Inventory).flat().filter(resource => resource.provider).map(({kind, url}) =>
+  <li key={url}><Link to={url}>{kind}</Link></li>
+)}</ul>
+
+
+## Public API
+
+[Browse services, methods, and types](/reference/api/)
+
+## Kubernetes resources
+
+Source chart · <code>{releases.crds.chart}</code> <code>{releases.crds.version}</code>
+
+{Object.entries(Inventory).map(([group, resources]) => <section key={group}>
+  <h3>{group}</h3>
+  <ul>{resources.map(({kind, version, url, purpose}) => <li key={url}><Link to={url}>{kind}</Link> <code>{version}</code>. {purpose}</li>)}</ul>
+</section>)}

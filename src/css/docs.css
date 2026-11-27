@@ -1,0 +1,55 @@
+:root {
+  --ifm-color-primary: #146645;
+  --ifm-color-primary-dark: #125c3e;
+  --ifm-color-primary-darker: #11573b;
+  --ifm-color-primary-darkest: #0e4730;
+  --ifm-color-primary-light: #16704c;
+  --ifm-color-primary-lighter: #177550;
+  --ifm-color-primary-lightest: #1a855a;
+  --ifm-code-font-size: 90%;
+  --ifm-heading-font-weight: 650;
+  --ifm-line-height-base: 1.65;
+  --ifm-navbar-shadow: 0 1px 0 var(--ifm-color-emphasis-200);
+}
+[data-theme='dark'] {
+  --ifm-color-primary: #8cdbb3;
+  --ifm-color-primary-dark: #71d39f;
+  --ifm-color-primary-darker: #64cf96;
+  --ifm-color-primary-darkest: #3bc37a;
+  --ifm-color-primary-light: #a7e3c5;
+  --ifm-color-primary-lighter: #b4e7ce;
+  --ifm-color-primary-lightest: #ddf4e9;
+}
+.navbar__logo img {width: auto; height: 30px;}
+.markdown td {vertical-align: top;}
+.markdown td code {overflow-wrap: anywhere;}
+.docs-home {max-width: 64rem; margin: clamp(2.5rem, 8vw, 6rem) auto; padding: 0 1.5rem;}
+.docs-home h1 {font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: -.05em; line-height: 1.1;}
+.docs-home .sections {display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 2rem;}
+.docs-home .sections article {border-top: 2px solid var(--ifm-color-primary); padding-top: 1.3rem;}
+.docs-home .sections h2 {font-size: 1.4rem;}
+.docs-home .sections p {max-width: 24rem;}
+
+/* Keep YAML keys, punctuation and scalar values distinguishable in either theme. */
+:root {
+  --yaml-key: #174b91;
+  --yaml-value: #245b3d;
+  --yaml-number: #923c13;
+  --yaml-punctuation: #56616d;
+}
+[data-theme='dark'] {
+  --yaml-key: #9ccaff;
+  --yaml-value: #a6dfbc;
+  --yaml-number: #ffb580;
+  --yaml-punctuation: #b4bcc8;
+}
+.language-yaml .token.key {color: var(--yaml-key) !important; font-weight: 650;}
+.language-yaml :is(.token.plain, .token.string, .token.scalar) {color: var(--yaml-value) !important;}
+.language-yaml :is(.token.boolean, .token.number, .token.null) {color: var(--yaml-number) !important;}
+.language-yaml .token.punctuation {color: var(--yaml-punctuation) !important;}
+
+/* Keep condition names intact while longer schema paths can still wrap. */
+.markdown .crd-status-guidance td:first-child code {overflow-wrap: normal;}
+.crd-disclosure {margin: 1rem 0; border-top: 1px solid var(--ifm-color-emphasis-300);}
+.crd-disclosure > summary {cursor: pointer; padding: 0.65rem 0; font-weight: 600;}
+.crd-disclosure span[id] {scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);}

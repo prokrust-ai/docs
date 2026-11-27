@@ -1,0 +1,9 @@
+node_modules/
+build/
+.docusaurus/
+.pnpm-store/
+docs/reference/kubernetes/
+.DS_Store
+static/examples/generated/
+
+docs/reference/api/rpc/

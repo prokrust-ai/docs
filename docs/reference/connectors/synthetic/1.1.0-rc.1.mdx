@@ -1,0 +1,25 @@
+---
+title: Synthetic connector 1.1.0-rc.1
+id: release-1.1.0-rc.1
+sidebar_label: '1.1.0-rc.1'
+slug: /reference/connectors/synthetic/1.1.0-rc.1
+---
+import connection from '@site/contracts/synthetic/1.1.0-rc.1/connection-v1.json';
+import selector from '@site/contracts/synthetic/1.1.0-rc.1/selector-v1.json';
+
+## Connection fields
+
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Minimum</th><th>Maximum</th></tr></thead>
+  <tbody>{Object.entries(connection.properties).map(([field, schema]) =>
+    <tr key={field}><td><code>spec.{field}</code></td><td>{schema.type}</td><td>{schema.minimum}</td><td>{schema.maximum}</td></tr>
+  )}</tbody>
+</table>
+
+[Field descriptions in SyntheticConnection](/reference/kubernetes/sources.prokrust.ai/v1beta1/syntheticconnection/#spec)
+
+## Table selector
+
+The selector schema requires <code>config.dataset</code> to equal <code>{selector.properties.dataset.const}</code>.
+
+[Selector fields in Table](/reference/kubernetes/data.prokrust.ai/v1beta1/table/#source)
